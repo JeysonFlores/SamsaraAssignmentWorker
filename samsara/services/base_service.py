@@ -1,23 +1,23 @@
-import os
 import requests
 
-from samsara.services.common import SamsaraServiceError
+from samsara.services.common import Configuration, SamsaraServiceError
 
 
 class BaseService:
-    def __init__(self, endpoint: str, auth_token: str, is_legacy: bool = False) -> None:
+    def __init__(
+        self, config: Configuration, endpoint: str, is_legacy: bool = False
+    ) -> None:
         super().__init__()
-        self.domain = os.environ["SAMSARA_API"]
+        self.config = config
         self.endpoint = endpoint
         self.is_legacy = is_legacy
-        self.auth_token = auth_token
-        self.headers = {"Authorization": f"Bearer {auth_token}"}
+        self.headers = {"Authorization": f"Bearer {self.config.auth}"}
 
     def _prepare_request(self, method: str, body: dict = {}, params: dict = {}):
         """
         Generic request creation. Takes in consideration if the service uses a legacy endpoint.
         """
-        url = f"{self.domain}{'/v1' if self.is_legacy else ''}{self.endpoint}"
+        url = f"{self.config.domain}{'/v1' if self.is_legacy else ''}{self.endpoint}"
 
         return requests.request(
             method, url, params=params, json=body, headers=self.headers
