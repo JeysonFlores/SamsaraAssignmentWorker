@@ -19,6 +19,9 @@ class SensorService(BaseService):
         self.sensor_id = sensor_id
 
     def get_data(self):
+        """
+        Retrieve data from the sensor.
+        """
         payload = {"sensors": [self.sensor_id]}
 
         sensor_results = self.make_request("POST", payload).get("sensors")
@@ -30,6 +33,9 @@ class SensorService(BaseService):
 
     @staticmethod
     def get_all(config: Configuration):
+        """
+        Retrieve all sensors from Samsara's API and match them with their respective vehicle.
+        """
         sensors_raw = make_samsara_request(
             config, "/sensors/list", is_legacy=True, method="POST"
         ).get("sensors", [])

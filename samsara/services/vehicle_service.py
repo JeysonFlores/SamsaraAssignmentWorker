@@ -16,7 +16,7 @@ class VehicleService(BaseService):
         for sensor in sensors:
             if sensor.get("vehicleId") != self.vehicle_id:
                 continue
-            print(sensor)
+
             if sensor.get("name") == DOOR_SENSOR:
                 self.door_sensor = SensorService(
                     self.config, sensor.get("id"), SensorType.DOOR_SENSOR
