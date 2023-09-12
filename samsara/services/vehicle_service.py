@@ -1,6 +1,6 @@
-from samsara.services.base_service import BaseService
-from samsara.services.sensor_service import SensorService
-from samsara.services.common import Configuration, SensorType
+from .base_service import BaseService
+from .sensor_service import SensorService
+from .common import Configuration, SensorType
 
 
 class VehicleService(BaseService):
@@ -30,11 +30,20 @@ class VehicleService(BaseService):
                     self.config, sensor.get("id"), SensorType.HUMIDITY_SENSOR
                 )
 
-    async def sync_sensors(self, action):
-        action(
-            {
-                "door_data": self.door_sensor.get_data(),
-                "temperature_data": self.temperature_sensor.get_data(),
-                "humidity_data": self.temperature_sensor.get_data(),
-            }
-        )
+    async def sync_sensors(self, callback):
+        sensors_data = {
+            "door_data": None,
+            "temperature_data": None,
+            "humidity_data": None,
+        }
+
+        if self.door_sensor is not None:
+            sensors_data["door_data"] = self.door_sensor.get_data()
+
+        if self.temperature_sensor is not None:
+            sensors_data["temperature_data"] = self.temperature_sensor.get_data()
+
+        if self.humidity_sensor is not None:
+            sensors_data["humidity_data"] = self.humidity_sensor.get_data()
+
+        callback(sensors_data)

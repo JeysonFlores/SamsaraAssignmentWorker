@@ -1,6 +1,6 @@
 import requests
 
-from samsara.services.common import Configuration, SamsaraServiceError
+from .common import Configuration, SamsaraServiceError
 
 
 class BaseService:

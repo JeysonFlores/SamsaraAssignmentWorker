@@ -1,5 +1,5 @@
-from samsara.services.base_service import BaseService
-from samsara.services.common import Configuration, SensorType, make_samsara_request
+from .base_service import BaseService
+from .common import Configuration, SensorType, make_samsara_request
 
 
 sensor_endpoints_dispatcher = {
