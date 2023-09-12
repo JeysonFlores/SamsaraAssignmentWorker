@@ -29,21 +29,44 @@ class VehicleService(BaseService):
                 self.humidity_sensor = SensorService(
                     self.config, sensor.get("id"), SensorType.HUMIDITY_SENSOR
                 )
-
+    def _format_sensor_data(self, data, main_key, new_main_key, time_key):
+        return {
+            new_main_key: data.get(main_key),
+            "timestamp": data.get(time_key)
+        }
+    
     async def sync_sensors(self, callback):
         sensors_data = {
-            "door_data": None,
-            "temperature_data": None,
-            "humidity_data": None,
+            "door": None,
+            "temperature": None,
+            "humidity": None,
         }
 
         if self.door_sensor is not None:
-            sensors_data["door_data"] = self.door_sensor.get_data()
+            sensors_data["door"] = self._format_sensor_data(
+                self.door_sensor.get_data(),
+                "doorClosed",
+                "closed",
+                "doorStatusTime",
+            )
 
         if self.temperature_sensor is not None:
-            sensors_data["temperature_data"] = self.temperature_sensor.get_data()
+            sensors_data["temperature"] = self._format_sensor_data(
+                self.temperature_sensor.get_data(),
+                "ambientTemperature",
+                "value",
+                "ambientTemperatureTime",
+            )
 
         if self.humidity_sensor is not None:
-            sensors_data["humidity_data"] = self.humidity_sensor.get_data()
+            sensors_data["humidity"] = self._format_sensor_data(
+                self.humidity_sensor.get_data(),
+                "humidity",
+                "value",
+                "humidityTime",
+            )
 
-        callback(sensors_data)
+        callback({
+            "id_vehicle": self.vehicle_id,
+            "sensors_data": sensors_data,
+        })
