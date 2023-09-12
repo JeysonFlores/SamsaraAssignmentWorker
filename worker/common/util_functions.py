@@ -20,5 +20,6 @@ def create_connection_to_redis():
         decode_responses=True,
     )
 
+
 def get_logger():
     return logger
