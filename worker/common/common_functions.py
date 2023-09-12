@@ -7,6 +7,9 @@ redis_connection = create_connection_to_redis()
 
 
 def get_value_from_redis(redis_key, to_dict=True):
+    """
+    Retrieves a value from the module-scoped redis connection.
+    """
     try:
         value = redis_connection.get(redis_key)
         if to_dict and value:

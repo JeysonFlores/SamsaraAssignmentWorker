@@ -11,6 +11,9 @@ from .base_exporter import BaseExporter
 
 class RedisExporter(BaseExporter):
     def is_newer(self, topic, message):
+        """
+        Compares if a message is newer than the last message published.
+        """
         newest_message_raw = get_value_from_redis(topic)
 
         if newest_message_raw is None:
@@ -25,6 +28,9 @@ class RedisExporter(BaseExporter):
         return message_timestamp > newest_message_timestamp
 
     def export(self, data):
+        """
+        Validates a sensor event message and publish it through redis pub/sub.
+        """
         vehicle_id = data.get("id_vehicle")
 
         for key, value in data.get("sensors_data").items():

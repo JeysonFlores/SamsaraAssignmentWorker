@@ -26,6 +26,9 @@ class Worker:
         self.vehicles = []
 
     def _process_input(self):
+        """
+        Reads input data from redis and parses it for further actions.
+        """
         input = get_value_from_redis(self.input_key)
 
         vehicle_ids = input.get("vehicles")
@@ -36,16 +39,25 @@ class Worker:
             self.vehicles.append(VehicleService(self.config, vehicle_id, sensors))
 
     async def _synchronize_services(self):
+        """
+        Executes all services synchronizers in parallel and exports their data.
+        """
         self._process_input()
         sync_pool = [svc.sync_sensors(self.exporter.export) for svc in self.vehicles]
         await asyncio.gather(*sync_pool)
 
     async def _inner_loop(self):
+        """
+        Worker loop. Defines the task that will be executed in inline-mode and the worker's refresh rate.
+        """
         while True:
             await self._synchronize_services()
             await asyncio.sleep(self.refresh_rate)
 
     def start(self):
+        """
+        Start trigger. Initializes low-level requirements.
+        """
         main_task = self.loop.create_task(self._inner_loop())
         self.loop.run_until_complete(main_task)
 
