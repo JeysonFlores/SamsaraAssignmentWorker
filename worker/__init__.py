@@ -16,17 +16,17 @@ logger = get_logger()
 
 class Worker:
     def __init__(self, exporter: BaseExporter) -> None:
+        self.exporter = exporter
         self.config = Configuration(
             os.environ.get("SAMSARA_ENDPOINT"), os.environ.get("SAMSARA_AUTH_TOKEN")
         )
-        self.vehicles = []
+        self.input_key = os.environ.get("WORKER_INPUT")
+        self.refresh_rate = int(os.environ.get("WORKER_REFRESH_RATE", 5))
         self.loop = asyncio.get_event_loop()
-        self.refresh_rate = int(os.environ.get("WORKER_REFRESH_RATE", 1))
-        self.exporter = exporter
+        self.vehicles = []
 
     def _process_input(self):
-        redis_key = os.environ.get("WORKER_INPUT")
-        input = get_value_from_redis(redis_key)
+        input = get_value_from_redis(self.input_key)
 
         vehicle_ids = input.get("vehicles")
 

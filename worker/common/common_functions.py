@@ -21,3 +21,7 @@ def set_value_into_redis(redis_key, payload, ttl=None):
     redis_connection.set(redis_key, json.dumps(payload))
     if ttl is not None and type(ttl) is int:
         redis_connection.expire(redis_key, ttl)
+
+
+def publish_value_to_redis_topic(topic, payload):
+    redis_connection.publish(topic, json.dumps(payload))
