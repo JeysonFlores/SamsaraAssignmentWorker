@@ -10,6 +10,9 @@ class VehicleService(BaseService):
         self._parse_sensors(sensors)
 
     def _parse_sensors(self, sensors: list[dict]):
+        """
+        Parses and initializes the vehicle's service sensors.
+        """
         DOOR_SENSOR = "Door Monitor"
         ENVIRONMENT_SENSOR = "Environment Sensor"
 
@@ -31,9 +34,15 @@ class VehicleService(BaseService):
                 )
 
     def _format_sensor_data(self, data, main_key, new_main_key, time_key):
+        """
+        Normalizes the format of the response of a sensor.
+        """
         return {new_main_key: data.get(main_key), "timestamp": data.get(time_key)}
 
     async def sync_sensors(self, callback):
+        """
+        Retrieves all of the sensors data and passes it to a callback.
+        """
         sensors_data = {
             "door": None,
             "temperature": None,
