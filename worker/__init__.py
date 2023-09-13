@@ -5,13 +5,9 @@ from samsara.services.common import Configuration
 from samsara.services.sensor_service import SensorService
 from samsara.services.vehicle_service import VehicleService
 
-from worker.common.util_functions import get_logger
 from worker.common.common_functions import get_value_from_redis
 
 from worker.services.exporters.base_exporter import BaseExporter
-
-
-logger = get_logger()
 
 
 class Worker:
