@@ -6,7 +6,12 @@ from worker.common.common_functions import (
     publish_value_to_redis_topic,
 )
 
+from worker.common.util_functions import get_logger
+
 from .base_exporter import BaseExporter
+
+
+logger = get_logger()
 
 
 class RedisExporter(BaseExporter):
@@ -38,6 +43,8 @@ class RedisExporter(BaseExporter):
 
             if not self.is_newer(event_key, value):
                 continue
+
+            logger.info(f"Message to export {value}")
 
             publish_value_to_redis_topic(event_key, value)
             set_value_into_redis(event_key, value.get("timestamp"))
