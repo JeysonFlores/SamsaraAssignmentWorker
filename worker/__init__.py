@@ -60,8 +60,3 @@ class Worker:
         """
         main_task = self.loop.create_task(self._inner_loop())
         self.loop.run_until_complete(main_task)
-
-
-if __name__ == "__main__":
-    app_worker = Worker()
-    app_worker.start()
