@@ -21,10 +21,16 @@ def get_value_from_redis(redis_key, to_dict=True):
 
 
 def set_value_into_redis(redis_key, payload, ttl=None):
+    """
+    Inserts value into a key in redis.
+    """
     redis_connection.set(redis_key, json.dumps(payload))
     if ttl is not None and type(ttl) is int:
         redis_connection.expire(redis_key, ttl)
 
 
 def publish_value_to_redis_topic(topic, payload):
+    """
+    Publishes a message through redis in a topic.
+    """
     redis_connection.publish(topic, json.dumps(payload))
